@@ -7,6 +7,7 @@ signed main(){
     vector<int> dx = {1,-1,0,0};
     vector<int> dy = {0,0,1,-1};
     vector<vector<double> > tileswlv(50, vector<double>(50, 0));
+    double dconst = 0.25;
     string prnt = " .:-=+*#%@";
     auto rain = [&](){
         for(int i = 0; i<50; i++){
@@ -18,6 +19,7 @@ signed main(){
 
     vector<vector<double> > tilescopy = tileswlv;
     auto drain = [&](){
+        
         for(int i = 0; i<50; i++){
             for(int j = 0; j<50; j++){
                 tileswlv[i][j]-=1;
@@ -31,11 +33,11 @@ signed main(){
             int neiy = y+dy[i];
             if(neix<0||neix>=50||neiy<0||neiy>=50){
                 
-                tilescopy[x][y]-=0.25*tileswlv[x][y];
+                tilescopy[x][y]-=dconst*tileswlv[x][y];
             }
             else{
-                tilescopy[x][y] -=0.25*max(tileswlv[x][y]-tileswlv[neix][neiy], (double)0);
-                tilescopy[neix][neiy] += 0.25*max(tileswlv[x][y]-tileswlv[neix][neiy], (double)0);
+                tilescopy[x][y] -=dconst*max(tileswlv[x][y]-tileswlv[neix][neiy], (double)0);
+                tilescopy[neix][neiy] += dconst*max(tileswlv[x][y]-tileswlv[neix][neiy], (double)0);
             }
         }
     };
@@ -74,12 +76,14 @@ signed main(){
         }cout<<endl;
     };
     int hr = 0;
+    int prntfreq = 2;
+    bool dr = 1;
     for(int i = 0; i<3; i++){
         hr++;
         rain();
         flood();
-        drain();
-        printtiles();
+        if(dr)drain();
+        if(hr%prntfreq==0)printtiles();
         if(check()){
             break;
         }
@@ -87,8 +91,8 @@ signed main(){
     while(!check()){
         hr++;
         flood();
-        drain();
-        printtiles();
+        if(dr)drain();
+        if(hr%prntfreq==0)printtiles();
     }
     
     cout<<hr<<endl;
